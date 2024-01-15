@@ -1,0 +1,7 @@
+env: "local" # local, dev, prod
+storage_path: "./storage/storage.db"
+posgres_password: "31415Kvn"
+http_server:
+  address: "localhost:8082"
+  timeout: 5s
+  idle_timeout: 60s
