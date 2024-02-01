@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"urlShortener/internal/config"
+	"urlShortener/internal/http-server/handlers/redirect"
 	"urlShortener/internal/http-server/handlers/url/save"
 	"urlShortener/internal/http-server/middleware/logger"
 	"urlShortener/internal/lib/logger/handlers/slogpretty"
@@ -43,7 +44,15 @@ func main() {
 	router.Use(logger.New(log))
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
+
+	router.Route("/url", func(r chi.Router) {
+		r.Use(middleware.BasicAuth("urlShortener", map[string]string{
+			cfg.HTTPServer.User: cfg.HTTPServer.Password,
+		}))
+	})
+
 	router.Post("/url", save.New(log, storage))
+	router.Get("/{alias}", redirect.New(log, storage))
 
 	log.Info("app started", slog.String("address", cfg.Address))
 

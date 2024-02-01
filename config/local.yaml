@@ -5,3 +5,5 @@ http_server:
   address: "localhost:8082"
   timeout: 5s
   idle_timeout: 60s
+  user: "user"
+  password: "password"
